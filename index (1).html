@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NINHO — Hospedagem & Reservas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sand: #F5F0E8;
+    --sand-dark: #EDE5D5;
+    --sand-mid: #D4C9B0;
+    --bark: #2C2416;
+    --bark-light: #5C4F38;
+    --terracotta: #C4622D;
+    --terracotta-light: #E8896A;
+    --sage: #6B7F5E;
+    --sage-light: #A8BF98;
+    --cream: #FDFAF5;
+    --white: #FFFFFF;
+    --text-muted: #8C7E6A;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--bark);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem;
+    height: 70px;
+    background: rgba(253, 250, 245, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(196, 185, 165, 0.3);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--bark);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bark-light);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--bark); }
+
+  .nav-cta {
+    background: var(--bark);
+    color: var(--cream) !important;
+    padding: 10px 24px;
+    border-radius: 2px;
+    font-size: 12px !important;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--bark-light) !important; color: var(--cream) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 70px;
+  }
+
+  .hero-left {
+    background: var(--bark);
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 5rem 4rem 5rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta-light);
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 5vw, 72px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 2rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--terracotta-light);
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    color: rgba(253, 250, 245, 0.6);
+    max-width: 340px;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--terracotta);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 2px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: #b8572a; }
+
+  .btn-ghost {
+    color: rgba(253, 250, 245, 0.7);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--cream); }
+
+  .btn-ghost::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+
+  .btn-ghost:hover::after { transform: translateX(4px); }
+
+  .hero-stats {
+    position: absolute; bottom: 3rem; left: 6rem;
+    display: flex; gap: 3rem;
+  }
+
+  .stat-item { }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--cream);
+    font-weight: 400;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(253,250,245,0.45);
+    margin-top: 2px;
+  }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    background: var(--sand-dark);
+  }
+
+  .hero-image {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-image-overlay {
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23C4622D' stroke-width='0.5' opacity='0.15'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* Placeholder image com gradiente elegante */
+  .hero-visual {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #D4C9B0 0%, #C4A882 40%, #A8845A 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  .hero-visual-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    color: rgba(44, 36, 22, 0.12);
+    font-weight: 400;
+    user-select: none;
+    position: absolute;
+    bottom: 2rem; right: 2rem;
+    line-height: 1;
+  }
+
+  .room-badge {
+    position: absolute; top: 2.5rem; right: 2.5rem;
+    background: var(--cream);
+    padding: 1.2rem 1.5rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .room-badge-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--bark);
+    font-weight: 400;
+  }
+
+  .room-badge-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* SEARCH BAR */
+  .search-section {
+    background: var(--cream);
+    padding: 0 3rem;
+    position: relative;
+    z-index: 10;
+    margin-top: -1px;
+  }
+
+  .search-card {
+    background: white;
+    border: 1px solid rgba(196, 185, 165, 0.4);
+    border-radius: 4px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    overflow: hidden;
+    box-shadow: 0 4px 32px rgba(44, 36, 22, 0.08);
+    transform: translateY(-28px);
+  }
+
+  .search-field {
+    padding: 1.4rem 1.8rem;
+    border-right: 1px solid rgba(196, 185, 165, 0.4);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .search-field:hover { background: var(--sand); }
+
+  .search-field:last-child { border-right: none; }
+
+  .search-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .search-value {
+    font-size: 15px;
+    color: var(--bark);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .search-value input, .search-value select {
+    border: none; background: none; outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; color: var(--bark);
+    width: 100%; cursor: pointer;
+  }
+
+  .search-btn {
+    background: var(--terracotta);
+    color: white;
+    border: none; cursor: pointer;
+    padding: 0 2.5rem;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover { background: #b8572a; }
+
+  /* ROOMS SECTION */
+  .section {
+    padding: 5rem 3rem 3rem;
+  }
+
+  .section-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 3rem;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--bark);
+  }
+
+  .section-title em { font-style: italic; }
+
+  .section-link {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bark-light);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: gap 0.2s;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--bark-light);
+  }
+
+  .section-link:hover { gap: 14px; }
+
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .room-card {
+    background: white;
+    border: 1px solid rgba(196, 185, 165, 0.35);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+
+  .room-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(44, 36, 22, 0.1);
+  }
+
+  .room-card-image {
+    aspect-ratio: 4/3;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .room-card-img-bg {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    color: rgba(44, 36, 22, 0.15);
+    transition: transform 0.4s;
+  }
+
+  .room-card:hover .room-card-img-bg { transform: scale(1.04); }
+
+  .bg-dorm { background: linear-gradient(135deg, #D4C9B0, #C4B894); }
+  .bg-privado { background: linear-gradient(135deg, #C4B894, #B8A67E); }
+  .bg-suite { background: linear-gradient(135deg, #B8A67E, #A89068); }
+
+  .room-tag {
+    position: absolute; top: 1rem; left: 1rem;
+    background: white;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bark);
+    font-weight: 500;
+  }
+
+  .room-tag.popular {
+    background: var(--terracotta);
+    color: white;
+  }
+
+  .room-card-body { padding: 1.5rem; }
+
+  .room-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--bark);
+    margin-bottom: 0.4rem;
+  }
+
+  .room-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .room-amenities {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .amenity {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px;
+    color: var(--bark-light);
+    font-weight: 300;
+  }
+
+  .amenity-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    flex-shrink: 0;
+  }
+
+  .room-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(196, 185, 165, 0.3);
+  }
+
+  .room-price-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .room-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--bark);
+    font-weight: 400;
+  }
+
+  .room-price span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  .btn-reserve {
+    background: var(--bark);
+    color: var(--cream);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-reserve:hover { background: var(--bark-light); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(44, 36, 22, 0.6);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--cream);
+    border-radius: 4px;
+    width: 90%; max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-header {
+    padding: 2.5rem 2.5rem 1.5rem;
+    border-bottom: 1px solid rgba(196, 185, 165, 0.3);
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+
+  .modal-room-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--bark);
+  }
+
+  .modal-close {
+    background: none; border: none;
+    font-size: 24px; cursor: pointer;
+    color: var(--text-muted);
+    line-height: 1;
+    padding: 0;
+    margin-left: 1rem;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--bark); }
+
+  .modal-body { padding: 2rem 2.5rem; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group {
+    display: flex; flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .form-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+
+  .form-input {
+    border: 1px solid rgba(196, 185, 165, 0.5);
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--bark);
+    background: white;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: var(--terracotta); }
+
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238C7E6A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  .price-summary {
+    background: var(--sand);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .price-row {
+    display: flex; justify-content: space-between;
+    font-size: 14px;
+    color: var(--bark-light);
+    margin-bottom: 8px;
+  }
+
+  .price-row.total {
+    padding-top: 0.8rem;
+    margin-top: 0.4rem;
+    border-top: 1px solid rgba(196, 185, 165, 0.5);
+    font-size: 16px;
+    color: var(--bark);
+    font-weight: 500;
+  }
+
+  .price-row.total .price-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  .btn-confirm {
+    width: 100%;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 2px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+  }
+
+  .btn-confirm:hover { background: #b8572a; }
+
+  /* SUCCESS */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 3rem 2.5rem;
+  }
+
+  .success-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--sand);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 24px;
+  }
+
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--bark);
+    margin-bottom: 0.8rem;
+  }
+
+  .success-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  /* EXPERIENCE SECTION */
+  .experience-section {
+    padding: 4rem 3rem 6rem;
+    background: var(--bark);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .exp-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: 460px;
+  }
+
+  .exp-photo {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .exp-photo-inner {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    color: rgba(253, 250, 245, 0.12);
+  }
+
+  .exp-photo:nth-child(1) { background: #3C2E1C; }
+  .exp-photo:nth-child(2) { background: #4A3A26; margin-top: 2rem; }
+  .exp-photo:nth-child(3) { background: #4A3A26; margin-top: -2rem; }
+  .exp-photo:nth-child(4) { background: #3C2E1C; }
+
+  .exp-content { }
+
+  .exp-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta-light);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .exp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3vw, 48px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+  }
+
+  .exp-title em { font-style: italic; }
+
+  .exp-desc {
+    font-size: 14px;
+    color: rgba(253, 250, 245, 0.55);
+    font-weight: 300;
+    line-height: 1.9;
+    margin-bottom: 2.5rem;
+  }
+
+  .exp-features {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .exp-feature {
+    display: flex; align-items: flex-start; gap: 0.8rem;
+  }
+
+  .feature-line {
+    width: 20px; height: 1px;
+    background: var(--terracotta);
+    margin-top: 10px;
+    flex-shrink: 0;
+  }
+
+  .feature-text {
+    font-size: 13px;
+    color: rgba(253, 250, 245, 0.7);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* REVIEWS */
+  .reviews-section {
+    padding: 5rem 3rem 6rem;
+    background: var(--sand);
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .review-card {
+    background: white;
+    border-radius: 4px;
+    padding: 2rem;
+    border: 1px solid rgba(196, 185, 165, 0.3);
+  }
+
+  .review-stars {
+    display: flex; gap: 3px; margin-bottom: 1.2rem;
+  }
+
+  .star {
+    width: 12px; height: 12px;
+    background: var(--terracotta);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  .review-text {
+    font-size: 14px;
+    color: var(--bark-light);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .reviewer {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .reviewer-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; color: white;
+    flex-shrink: 0;
+  }
+
+  .reviewer-name {
+    font-size: 13px;
+    color: var(--bark);
+    font-weight: 500;
+  }
+
+  .reviewer-from {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+    letter-spacing: 0.5px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--bark);
+    padding: 4rem 3rem 2rem;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(253, 250, 245, 0.1);
+  }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--cream);
+    letter-spacing: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .footer-tagline {
+    font-size: 13px;
+    color: rgba(253, 250, 245, 0.45);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 220px;
+  }
+
+  .footer-col h4 {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(253, 250, 245, 0.45);
+    margin-bottom: 1.2rem;
+    font-weight: 400;
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col li {
+    margin-bottom: 0.7rem;
+  }
+
+  .footer-col a {
+    font-size: 13px;
+    color: rgba(253, 250, 245, 0.65);
+    text-decoration: none;
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--cream); }
+
+  .footer-bottom {
+    padding-top: 2rem;
+    display: flex; justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(253, 250, 245, 0.3);
+    font-weight: 300;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    background: var(--bark);
+    color: var(--cream);
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 2000;
+    border-left: 3px solid var(--terracotta);
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 4rem 2rem; }
+    .hero-stats { left: 2rem; }
+    .search-card { grid-template-columns: 1fr 1fr; }
+    .rooms-grid, .reviews-grid { grid-template-columns: 1fr 1fr; }
+    .experience-section { grid-template-columns: 1fr; }
+    .exp-visual { display: none; }
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .section { padding: 4rem 1.5rem 2rem; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .search-card { grid-template-columns: 1fr; }
+    .rooms-grid, .reviews-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">NINHO</a>
+  <ul class="nav-links">
+    <li><a href="#quartos">Quartos</a></li>
+    <li><a href="#experiencia">Experiência</a></li>
+    <li><a href="#avaliacoes">Avaliações</a></li>
+    <li><a href="#" class="nav-cta">Reservar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Florianópolis, Santa Catarina</p>
+    <h1 class="hero-title">
+      Um lugar para<br>
+      <em>descansar</em><br>
+      de verdade.
+    </h1>
+    <p class="hero-desc">
+      Hospedagem pensada com cuidado, onde cada detalhe existe para que você se sinta em casa — ou melhor.
+    </p>
+    <div class="hero-actions">
+      <a href="#quartos" class="btn-primary">Ver quartos</a>
+      <a href="#experiencia" class="btn-ghost">Conhecer o espaço</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">4.9</div>
+        <div class="stat-label">Avaliação</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2k+</div>
+        <div class="stat-label">Hóspedes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Tipos de quarto</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="hero-visual-text">N</div>
+    </div>
+    <div class="room-badge">
+      <div class="room-badge-price">R$59</div>
+      <div class="room-badge-label">por noite</div>
+    </div>
+    <div class="hero-image-overlay"></div>
+  </div>
+</section>
+
+<!-- BUSCA -->
+<section class="search-section">
+  <div class="search-card">
+    <div class="search-field">
+      <span class="search-label">Destino</span>
+      <div class="search-value">
+        <select class="form-select" style="border:none;background:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--bark);width:100%;cursor:pointer;padding:0;appearance:none;">
+          <option>Florianópolis, SC</option>
+          <option>São Paulo, SP</option>
+          <option>Rio de Janeiro, RJ</option>
+        </select>
+      </div>
+    </div>
+    <div class="search-field">
+      <span class="search-label">Check-in</span>
+      <div class="search-value">
+        <input type="date" class="form-input" style="border:none;padding:0;border-radius:0;" id="checkin">
+      </div>
+    </div>
+    <div class="search-field">
+      <span class="search-label">Check-out</span>
+      <div class="search-value">
+        <input type="date" class="form-input" style="border:none;padding:0;border-radius:0;" id="checkout">
+      </div>
+    </div>
+    <button class="search-btn" onclick="buscarQuartos()">Buscar</button>
+  </div>
+</section>
+
+<!-- QUARTOS -->
+<section class="section" id="quartos">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Acomodações</span>
+      <h2 class="section-title">Encontre seu<br><em>espaço ideal</em></h2>
+    </div>
+    <a href="#" class="section-link">Ver todos →</a>
+  </div>
+
+  <div class="rooms-grid">
+
+    <!-- Dorm -->
+    <div class="room-card" onclick="abrirModal('dorm')">
+      <div class="room-card-image">
+        <div class="room-card-img-bg bg-dorm">♾</div>
+        <span class="room-tag popular">Mais reservado</span>
+      </div>
+      <div class="room-card-body">
+        <h3 class="room-name">Dormitório Misto</h3>
+        <p class="room-desc">Camas comodas em ambiente descontraído, ideal para viajantes solo que querem conhecer pessoas novas.</p>
+        <div class="room-amenities">
+          <span class="amenity"><span class="amenity-dot"></span>Wi-fi incluso</span>
+          <span class="amenity"><span class="amenity-dot"></span>Armário individual</span>
+          <span class="amenity"><span class="amenity-dot"></span>Roupa de cama</span>
+          <span class="amenity"><span class="amenity-dot"></span>AC</span>
+        </div>
+        <div class="room-footer">
+          <div>
+            <div class="room-price-label">A partir de</div>
+            <div class="room-price">R$59 <span>/ noite</span></div>
+          </div>
+          <a class="btn-reserve" onclick="abrirModal('dorm'); event.stopPropagation();">Reservar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privativo -->
+    <div class="room-card" onclick="abrirModal('privado')">
+      <div class="room-card-image">
+        <div class="room-card-img-bg bg-privado">◈</div>
+        <span class="room-tag">Para casais</span>
+      </div>
+      <div class="room-card-body">
+        <h3 class="room-name">Quarto Privativo</h3>
+        <p class="room-desc">Privacidade com o espírito do hostel. Quarto exclusivo com banheiro compartilhado e toda a estrutura do Ninho.</p>
+        <div class="room-amenities">
+          <span class="amenity"><span class="amenity-dot"></span>Wi-fi incluso</span>
+          <span class="amenity"><span class="amenity-dot"></span>Café da manhã</span>
+          <span class="amenity"><span class="amenity-dot"></span>TV 32"</span>
+          <span class="amenity"><span class="amenity-dot"></span>AC</span>
+        </div>
+        <div class="room-footer">
+          <div>
+            <div class="room-price-label">A partir de</div>
+            <div class="room-price">R$139 <span>/ noite</span></div>
+          </div>
+          <a class="btn-reserve" onclick="abrirModal('privado'); event.stopPropagation();">Reservar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suite -->
+    <div class="room-card" onclick="abrirModal('suite')">
+      <div class="room-card-image">
+        <div class="room-card-img-bg bg-suite">◇</div>
+        <span class="room-tag">Premium</span>
+      </div>
+      <div class="room-card-body">
+        <h3 class="room-name">Suíte Standard</h3>
+        <p class="room-desc">Conforto máximo com banheiro privativo, varanda e café da manhã incluído. A melhor experiência do Ninho.</p>
+        <div class="room-amenities">
+          <span class="amenity"><span class="amenity-dot"></span>Banheiro privativo</span>
+          <span class="amenity"><span class="amenity-dot"></span>Café incluso</span>
+          <span class="amenity"><span class="amenity-dot"></span>Varanda</span>
+          <span class="amenity"><span class="amenity-dot"></span>Smart TV</span>
+        </div>
+        <div class="room-footer">
+          <div>
+            <div class="room-price-label">A partir de</div>
+            <div class="room-price">R$219 <span>/ noite</span></div>
+          </div>
+          <a class="btn-reserve" onclick="abrirModal('suite'); event.stopPropagation();">Reservar</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIÊNCIA -->
+<section class="experience-section" id="experiencia">
+  <div class="exp-visual">
+    <div class="exp-photo"><div class="exp-photo-inner">☁</div></div>
+    <div class="exp-photo"><div class="exp-photo-inner">◯</div></div>
+    <div class="exp-photo"><div class="exp-photo-inner">◻</div></div>
+    <div class="exp-photo"><div class="exp-photo-inner">△</div></div>
+  </div>
+  <div class="exp-content">
+    <span class="exp-tag">Nossa filosofia</span>
+    <h2 class="exp-title">Mais que<br>uma cama —<br><em>uma experiência</em></h2>
+    <p class="exp-desc">
+      No Ninho, acreditamos que viajar é sobre conexão: com o lugar, com as pessoas e consigo mesmo. Por isso cada espaço foi pensado para estimular isso.
+    </p>
+    <div class="exp-features">
+      <div class="exp-feature">
+        <div class="feature-line"></div>
+        <p class="feature-text">Área de convivência aberta 24h</p>
+      </div>
+      <div class="exp-feature">
+        <div class="feature-line"></div>
+        <p class="feature-text">Cozinha compartilhada equipada</p>
+      </div>
+      <div class="exp-feature">
+        <div class="feature-line"></div>
+        <p class="feature-text">Eventos e noites culturais</p>
+      </div>
+      <div class="exp-feature">
+        <div class="feature-line"></div>
+        <p class="feature-text">Locação de bikes e pranchas</p>
+      </div>
+      <div class="exp-feature">
+        <div class="feature-line"></div>
+        <p class="feature-text">Check-in & out flexíveis</p>
+      </div>
+      <div class="exp-feature">
+        <div class="feature-line"></div>
+        <p class="feature-text">Café da manhã artesanal</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVALIAÇÕES -->
+<section class="reviews-section" id="avaliacoes">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Hóspedes</span>
+      <h2 class="section-title">O que dizem<br><em>sobre o Ninho</em></h2>
+    </div>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">
+        <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      </div>
+      <p class="review-text">"Absolutamente encantador. A atmosfera do lugar é única — parece que o espaço foi pensado com muito amor. Voltarei com certeza."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar" style="background: var(--sage);">AM</div>
+        <div>
+          <div class="reviewer-name">Ana Martins</div>
+          <div class="reviewer-from">São Paulo, SP</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">
+        <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      </div>
+      <p class="review-text">"Melhor custo-benefício de Floripa. Equipe incrível, localização perfeita e a energia do lugar é impossível de descrever. Recomendo demais."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar" style="background: var(--terracotta);">RF</div>
+        <div>
+          <div class="reviewer-name">Rafael Fonseca</div>
+          <div class="reviewer-from">Belo Horizonte, MG</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">
+        <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      </div>
+      <p class="review-text">"Fui sozinha e saí com amigos para a vida. Esse hostel tem uma alma especial. As instalações são lindas e muito bem cuidadas."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar" style="background: var(--bark-light);">JS</div>
+        <div>
+          <div class="reviewer-name">Juliana Souza</div>
+          <div class="reviewer-from">Curitiba, PR</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">NINHO</div>
+      <p class="footer-tagline">Hospedagem com alma, no coração de Florianópolis.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Hostel</h4>
+      <ul>
+        <li><a href="#">Sobre nós</a></li>
+        <li><a href="#">Quartos</a></li>
+        <li><a href="#">Galeria</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Reservas</h4>
+      <ul>
+        <li><a href="#">Como reservar</a></li>
+        <li><a href="#">Política de cancelamento</a></li>
+        <li><a href="#">Check-in</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contato</h4>
+      <ul>
+        <li><a href="#">ninho@hostel.com.br</a></li>
+        <li><a href="#">(48) 99999-0000</a></li>
+        <li><a href="#">@ninhohostel</a></li>
+        <li><a href="#">Rua das Flores, 42 — Floripa</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Ninho Hostel. Todos os direitos reservados.</p>
+    <p class="footer-copy">Feito com cuidado em Santa Catarina.</p>
+  </div>
+</footer>
+
+<!-- MODAL DE RESERVA -->
+<div class="modal-overlay" id="modal" onclick="fecharModalOverlay(event)">
+  <div class="modal">
+    <div id="modal-form-content">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-room-name" id="modal-titulo">Reservar Quarto</h3>
+          <p style="font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:300;" id="modal-preco"></p>
+        </div>
+        <button class="modal-close" onclick="fecharModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Check-in</label>
+            <input type="date" class="form-input" id="modal-checkin">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Check-out</label>
+            <input type="date" class="form-input" id="modal-checkout">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nome completo</label>
+            <input type="text" class="form-input" placeholder="Seu nome" id="modal-nome">
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input type="email" class="form-input" placeholder="seu@email.com" id="modal-email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hóspedes</label>
+          <select class="form-input form-select" id="modal-hospedes">
+            <option>1 hóspede</option>
+            <option>2 hóspedes</option>
+            <option>3 hóspedes</option>
+            <option>4 hóspedes</option>
+          </select>
+        </div>
+        <div class="price-summary" id="price-summary" style="display:none;">
+          <div class="price-row">
+            <span id="price-noites-label">2 noites × R$59</span>
+            <span id="price-noites-val">R$118</span>
+          </div>
+          <div class="price-row">
+            <span>Taxa de serviço</span>
+            <span id="price-taxa">R$12</span>
+          </div>
+          <div class="price-row total">
+            <span>Total</span>
+            <span class="price-val" id="price-total">R$130</span>
+          </div>
+        </div>
+        <button class="btn-confirm" onclick="confirmarReserva()">Confirmar reserva</button>
+        <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:1rem;font-weight:300;">Cancelamento gratuito até 48h antes do check-in</p>
+      </div>
+    </div>
+    <div class="success-msg" id="success-msg">
+      <div class="success-icon">✓</div>
+      <h3 class="success-title">Reserva confirmada!</h3>
+      <p class="success-desc">Em instantes você receberá uma confirmação no e-mail com todos os detalhes da sua estadia. Mal podemos esperar para te receber!</p>
+      <button class="btn-confirm" style="margin-top:2rem;" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const quartos = {
+    dorm: { nome: 'Dormitório Misto', preco: 59 },
+    privado: { nome: 'Quarto Privativo', preco: 139 },
+    suite: { nome: 'Suíte Standard', preco: 219 }
+  };
+
+  let quartoAtual = null;
+
+  function abrirModal(tipo) {
+    quartoAtual = tipo;
+    const q = quartos[tipo];
+    document.getElementById('modal-titulo').textContent = q.nome;
+    document.getElementById('modal-preco').textContent = 'R$' + q.preco + ' por noite';
+
+    // pré-preenche as datas da busca se houver
+    const ci = document.getElementById('checkin').value;
+    const co = document.getElementById('checkout').value;
+    if (ci) document.getElementById('modal-checkin').value = ci;
+    if (co) document.getElementById('modal-checkout').value = co;
+
+    document.getElementById('modal-form-content').style.display = 'block';
+    document.getElementById('success-msg').style.display = 'none';
+    document.getElementById('modal').classList.add('active');
+    calcularPreco();
+  }
+
+  function fecharModal() {
+    document.getElementById('modal').classList.remove('active');
+  }
+
+  function fecharModalOverlay(e) {
+    if (e.target === document.getElementById('modal')) fecharModal();
+  }
+
+  document.getElementById('modal-checkin').addEventListener('change', calcularPreco);
+  document.getElementById('modal-checkout').addEventListener('change', calcularPreco);
+
+  function calcularPreco() {
+    const ci = document.getElementById('modal-checkin').value;
+    const co = document.getElementById('modal-checkout').value;
+    if (!ci || !co || !quartoAtual) return;
+
+    const d1 = new Date(ci), d2 = new Date(co);
+    const noites = Math.round((d2 - d1) / 86400000);
+    if (noites <= 0) return;
+
+    const q = quartos[quartoAtual];
+    const subtotal = noites * q.preco;
+    const taxa = Math.round(subtotal * 0.1);
+    const total = subtotal + taxa;
+
+    document.getElementById('price-noites-label').textContent = noites + ' noite' + (noites > 1 ? 's' : '') + ' × R$' + q.preco;
+    document.getElementById('price-noites-val').textContent = 'R$' + subtotal;
+    document.getElementById('price-taxa').textContent = 'R$' + taxa;
+    document.getElementById('price-total').textContent = 'R$' + total;
+    document.getElementById('price-summary').style.display = 'block';
+  }
+
+  function confirmarReserva() {
+    const nome = document.getElementById('modal-nome').value.trim();
+    const email = document.getElementById('modal-email').value.trim();
+    const ci = document.getElementById('modal-checkin').value;
+    const co = document.getElementById('modal-checkout').value;
+
+    if (!nome || !email || !ci || !co) {
+      mostrarToast('Preencha todos os campos para continuar.');
+      return;
+    }
+
+    if (!email.includes('@')) {
+      mostrarToast('Insira um e-mail válido.');
+      return;
+    }
+
+    document.getElementById('modal-form-content').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+  }
+
+  function buscarQuartos() {
+    const ci = document.getElementById('checkin').value;
+    const co = document.getElementById('checkout').value;
+    if (!ci || !co) {
+      mostrarToast('Selecione as datas de check-in e check-out.');
+      return;
+    }
+    document.getElementById('quartos').scrollIntoView({ behavior: 'smooth' });
+    mostrarToast('Mostrando disponibilidade para suas datas!');
+  }
+
+  function mostrarToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // Define datas padrão
+  const hoje = new Date();
+  const amanha = new Date(); amanha.setDate(hoje.getDate() + 1);
+  const fmt = d => d.toISOString().split('T')[0];
+  document.getElementById('checkin').value = fmt(hoje);
+  document.getElementById('checkout').value = fmt(amanha);
+</script>
+
+</body>
+</html>
